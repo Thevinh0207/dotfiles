@@ -273,6 +273,14 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 
 -- See https://wiki.hypr.land/configuring/core/rules/
 
+-- Noti for volume and brightness
+hl.layer_rule({
+	name = "notification-blur",
+	match = { namespace = "notifications" },
+	blur = true,
+	ignore_alpha = 0.2,
+})
+
 -- Quick menu window rule
 hl.window_rule({
 	name = "quick-menu-float",
@@ -328,3 +336,29 @@ hl.layer_rule({
 	match = { namespace = "waybar" },
 	animation = "slide top",
 })
+
+-- Audio and brightness
+hl.bind(
+	"XF86AudioRaiseVolume",
+	hl.dsp.exec_cmd("~/.config/hypr/scripts/osd.sh volume-up"),
+	{ locked = true, repeating = true }
+)
+hl.bind(
+	"XF86AudioLowerVolume",
+	hl.dsp.exec_cmd("~/.config/hypr/scripts/osd.sh volume-down"),
+	{ locked = true, repeating = true }
+)
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("~/.config/hypr/scripts/osd.sh volume-mute"), { locked = true })
+hl.bind(
+	"XF86MonBrightnessUp",
+	hl.dsp.exec_cmd("~/.config/hypr/scripts/osd.sh brightness-up"),
+	{ locked = true, repeating = true }
+)
+hl.bind(
+	"XF86MonBrightnessDown",
+	hl.dsp.exec_cmd("~/.config/hypr/scripts/osd.sh brightness-down"),
+	{ locked = true, repeating = true }
+)
+
+-- nightLight keybind
+hl.bind(mainMod .. " + I", hl.dsp.exec_cmd("~/.config/hypr/scripts/nightlight.sh"))

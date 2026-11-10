@@ -31,6 +31,22 @@ border-size=0
 background-color=#1f1f2835
 text-color=#dcd7bab3
 
+[app-name=osd]
+anchor=bottom-center
+outer-margin=0,0,40,0
+font=JetBrainsMono Nerd Font 11
+text-alignment=center
+format=%b
+markup=1
+width=300
+height=44
+padding=8,16
+border-size=0
+border-radius=22
+background-color=#1f1f2880
+text-color=#dcd7ba
+progress-color=over #00000000
+
 [mode=do-not-disturb]
 invisible=1
 
@@ -38,4 +54,7 @@ invisible=1
 invisible=0
 
 [mode=do-not-disturb app-name=powermode]
+invisible=0
+
+[mode=do-not-disturb app-name=osd]
 invisible=0

@@ -16,12 +16,11 @@
     "modules-right": [
         "cpu",
         "memory",
-        "backlight",
-        "pulseaudio",
         "network",
         "power-profiles-daemon",
         "battery",
-        "clock"
+        "clock",
+        "custom/menu"
     ],
     "hyprland/workspaces": {
         "format": "{name}",
@@ -101,5 +100,10 @@
     "clock": {
         "format": "{:%a %d %b  \uf017 %H:%M}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "custom/menu": {
+        "format": "\uf1de",
+        "on-click": "qs ipc call panel toggle",
+        "tooltip": false
     }
 }

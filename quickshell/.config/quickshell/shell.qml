@@ -94,11 +94,7 @@ ShellRoot {
     Timer {
         id: nightApply
         interval: 300
-        onTriggered: {
-            let cmd = "echo " + root.nightStrength + " > ~/.cache/nightlight-strength"
-            if (root.night) cmd += "; pkill -x hyprsunset; hyprsunset -t " + root.nightTemp() + " >/dev/null 2>&1 &"
-            Quickshell.execDetached(["sh", "-c", cmd])
-        }
+        onTriggered: Quickshell.execDetached(["sh", "-c", "~/.config/hypr/scripts/nightlight-set.sh " + root.nightStrength])
     }
 
     component Tile: Rectangle {

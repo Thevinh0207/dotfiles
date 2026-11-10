@@ -111,3 +111,12 @@ tooltip {
 #battery.critical:not(.charging) {
   color: #c34043;
 }
+
+#custom-menu {
+  padding: 0 14px 0 8px;
+  color: #dcd7ba;
+}
+
+#custom-menu:hover {
+  color: #7e9cd8;
+}
