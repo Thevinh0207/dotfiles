@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="power_supply", KERNEL=="BAT*", ATTR{charge_control_end_threshold}="80", RUN+="/bin/chmod 666 /sys%p/charge_control_end_threshold"

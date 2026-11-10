@@ -1,0 +1,15 @@
+#!/bin/sh
+
+file=/sys/class/power_supply/BAT0/charge_control_end_threshold
+saved=/var/lib/battery-limit
+
+case "$1" in
+    pre)
+        cat "$file" > "$saved"
+        ;;
+    post)
+        sleep 3
+        [ -f "$saved" ] && cat "$saved" > "$file"
+        chmod 666 "$file"
+        ;;
+esac

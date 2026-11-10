@@ -13,6 +13,7 @@ echo "muted=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q MUTED && echo yes 
 echo "brightness=$(brightnessctl -m | cut -d, -f4 | tr -d '%')"
 echo "dnd=$(makoctl mode | grep -q do-not-disturb && echo on || echo off)"
 echo "night=$(pgrep -x hyprsunset >/dev/null && echo on || echo off)"
+echo "night_strength=$(cat ~/.cache/nightlight-strength 2>/dev/null || echo 50)"
 echo "media_status=$(playerctl status 2>/dev/null)"
 echo "media_title=$(playerctl metadata title 2>/dev/null)"
 echo "media_artist=$(playerctl metadata artist 2>/dev/null)"

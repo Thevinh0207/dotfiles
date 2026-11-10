@@ -1,6 +1,6 @@
 * {
   font-family: "JetBrainsMono Nerd Font";
-  font-size: 14px;
+  font-size: 13px;
   min-height: 0;
   border: none;
   border-radius: 0;
@@ -23,7 +23,7 @@ tooltip {
 }
 
 #workspaces button {
-  padding: 0 10px;
+  padding: 0 9px;
   margin: 4px 2px;
   color: #727169;
   background: transparent;
@@ -38,7 +38,7 @@ tooltip {
 }
 
 #workspaces button.active {
-  background: rgba(200, 200, 200, 0.85);
+  background: rgba(126, 156, 216, 0.85);
 }
 
 #workspaces button.active label {
@@ -69,6 +69,25 @@ tooltip {
 #custom-power {
   padding: 0 8px;
   color: #dcd7ba;
+}
+
+#mpris,
+#custom-media-prev,
+#custom-media-next {
+  padding: 0 6px;
+  color: #dcd7ba;
+}
+
+#mpris {
+  margin-left: 8px;
+}
+
+#mpris.spotify {
+  color: #98bb6c;
+}
+
+#mpris.paused {
+  color: #727169;
 }
 
 #battery.critical,
