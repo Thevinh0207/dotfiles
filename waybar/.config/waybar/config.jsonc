@@ -68,7 +68,8 @@
         ],
         "tooltip-format-wifi": "{essid} ({signalStrength}%)",
         "tooltip-format-ethernet": "{ifname}: {ipaddr}",
-        "tooltip-format-disconnected": "Disconnected"
+        "tooltip-format-disconnected": "Disconnected",
+        "on-click": "~/.config/hypr/scripts/wifi-menu.sh"
     },
     "power-profiles-daemon": {
         "format": "{icon}",

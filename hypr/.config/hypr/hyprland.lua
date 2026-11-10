@@ -30,6 +30,7 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("~/.config/hypr/scripts/waybar-autohide.sh")
 	hl.exec_cmd("~/.config/hypr/scripts/workspace-popup.sh")
 	hl.exec_cmd("~/.config/hypr/scripts/battery-monitor.sh")
+	hl.exec_cmd("qs")
 end)
 
 -------------------------------
@@ -230,7 +231,7 @@ for i = 1, 10 do
 end
 
 -- Quick menu pop up
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("~/.config/hypr/scripts/quick-menu.sh"))
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("qs ipc call panel toggle"))
 
 -- Special workspace (scratchpad)
 hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))
@@ -271,6 +272,18 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 --------------------------------
 
 -- See https://wiki.hypr.land/configuring/core/rules/
+
+-- Quick menu window rule
+hl.window_rule({
+	name = "quick-menu-float",
+	match = {
+		class = "^(nmtui|blueman-manager|\\.blueman-manager-wrapped|pavucontrol|org\\.pulseaudio\\.pavucontrol)$",
+	},
+
+	float = true,
+	center = true,
+	size = "900 600",
+})
 
 hl.window_rule({
 	-- Ignore maximize requests from all apps

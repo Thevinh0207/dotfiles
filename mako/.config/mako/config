@@ -30,3 +30,12 @@ padding=42
 border-size=0
 background-color=#1f1f2835
 text-color=#dcd7bab3
+
+[mode=do-not-disturb]
+invisible=1
+
+[mode=do-not-disturb app-name=workspace]
+invisible=0
+
+[mode=do-not-disturb app-name=powermode]
+invisible=0
