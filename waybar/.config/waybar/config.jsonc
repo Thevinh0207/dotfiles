@@ -1,0 +1,104 @@
+{
+    "layer": "top",
+    "exclusive": false,
+    "start_hidden": true,
+    "height": 35,
+    "spacing": 10,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
+    "modules-left": [
+        "hyprland/workspaces"
+    ],
+    "modules-center": [
+        "hyprland/window"
+    ],
+    "modules-right": [
+        "cpu",
+        "memory",
+        "backlight",
+        "pulseaudio",
+        "network",
+        "power-profiles-daemon",
+        "battery",
+        "clock"
+    ],
+    "hyprland/workspaces": {
+        "format": "{name}",
+        "persistent-workspaces": {
+            "*": 2
+        }
+    },
+    "hyprland/window": {
+        "max-length": 50
+    },
+    "cpu": {
+        "format": "\uf2db {usage}%",
+        "tooltip": false
+    },
+    "memory": {
+        "format": "\udb80\udf5b {used:0.1f}/{total:0.1f}G",
+        "tooltip-format": "RAM: {used:0.1f}G used of {total:0.1f}G ({percentage}%)\nAvailable: {avail:0.1f}G\nSwap: {swapUsed:0.1f}G of {swapTotal:0.1f}G"
+    },
+    "backlight": {
+        "format": "\udb80\udce0 {percent}%",
+        "min-brightness": 1
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "\uf026 muted",
+        "format-icons": {
+            "default": [
+                "\uf026",
+                "\uf027",
+                "\uf028"
+            ]
+        }
+    },
+    "network": {
+        "format-wifi": "{icon}",
+        "format-ethernet": "\udb80\ude00",
+        "format-disconnected": "\udb82\udd2e",
+        "format-icons": [
+            "\udb82\udd2f",
+            "\udb82\udd1f",
+            "\udb82\udd22",
+            "\udb82\udd25",
+            "\udb82\udd28"
+        ],
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)",
+        "tooltip-format-ethernet": "{ifname}: {ipaddr}",
+        "tooltip-format-disconnected": "Disconnected"
+    },
+    "power-profiles-daemon": {
+        "format": "{icon}",
+        "tooltip-format": "Power mode: {profile}",
+        "format-icons": {
+            "default": "\uf24e",
+            "performance": "\uf0e7",
+            "balanced": "\uf24e",
+            "power-saver": "\uf06c"
+        }
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "\uf0e7 {capacity}%",
+        "format-plugged": "\uf1e6 {capacity}%",
+        "format-icons": [
+            "\uf244",
+            "\uf243",
+            "\uf242",
+            "\uf241",
+            "\uf240"
+        ],
+        "tooltip-format": "{timeTo}"
+    },
+    "clock": {
+        "format": "{:%a %d %b  \uf017 %H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    }
+}

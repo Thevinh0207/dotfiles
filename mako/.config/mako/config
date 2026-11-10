@@ -1,0 +1,32 @@
+font=JetBrainsMono Nerd Font 11
+background-color=#1f1f28
+text-color=#dcd7ba
+border-color=#7e9cd8
+border-size=2
+border-radius=10
+padding=12
+default-timeout=5000
+
+[app-name=workspace]
+anchor=center
+font=JetBrainsMono Nerd Font 40
+text-alignment=center
+format=%s
+width=500
+height=250
+padding=42
+border-size=0
+background-color=#1f1f2835
+text-color=#dcd7bab3
+
+[app-name=powermode]
+anchor=center
+font=JetBrainsMono Nerd Font 40
+text-alignment=center
+format=%s
+width=500
+height=250
+padding=42
+border-size=0
+background-color=#1f1f2835
+text-color=#dcd7bab3

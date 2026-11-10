@@ -1,0 +1,5 @@
+cursor_blink_interval 0
+
+# Fonts
+font_family JetBrainsMono Nerd Font
+font_size 12
