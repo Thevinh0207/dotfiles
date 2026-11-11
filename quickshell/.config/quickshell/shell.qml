@@ -6,6 +6,7 @@ import Quickshell.Wayland
 ShellRoot {
     id: root
     Lock {}
+    TabBars {}
 
     property int battery: 0
     property string batStatus: ""

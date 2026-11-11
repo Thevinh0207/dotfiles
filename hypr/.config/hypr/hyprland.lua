@@ -31,7 +31,15 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("~/.config/hypr/scripts/workspace-popup.sh")
 	hl.exec_cmd("~/.config/hypr/scripts/battery-monitor.sh")
 	hl.exec_cmd("qs")
+	hl.exec_cmd("~/.config/hypr/scripts/wallpaper.sh")
 end)
+
+hl.config({
+	ecosystem = {
+		no_update_news = true,
+		no_donation_nag = true,
+	},
+})
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
@@ -125,17 +133,16 @@ hl.config({
 			border_inactive = "rgba(000000aa)",
 		},
 		groupbar = {
-			font_family = "JetBrainsMono Nerd Font",
-			font_size = 11,
-			height = 20,
-			gradients = true,
-			rounding = 8,
+			enabled = true,
+			height = 28,
+			render_titles = true,
+			gradients = false,
 			indicator_height = 0,
-			text_color = "rgba(1f1f28ff)",
-			text_color_inactive = "rgba(dcd7baff)",
+			text_color = "rgba(00000000)",
+			text_color_inactive = "rgba(00000000)",
 			col = {
-				active = "rgba(7e9cd8dd)",
-				inactive = "rgba(2a2a37dd)",
+				active = "rgba(00000000)",
+				inactive = "rgba(00000000)",
 			},
 		},
 	},
@@ -147,8 +154,9 @@ hl.config({
 
 hl.config({
 	misc = {
-		force_default_wallpaper = -1,
-		disable_hyprland_logo = false,
+		force_default_wallpaper = 0,
+		disable_hyprland_logo = true,
+		disable_splash_rendering = true,
 		allow_session_lock_restore = true,
 	},
 })

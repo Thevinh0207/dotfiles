@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Effects
+import Qt.labs.folderlistmodel
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
@@ -23,9 +24,17 @@ Scope {
                 root.failed = false
                 sessionLock.locked = false
             } else {
+                root.failed = false
                 root.failed = true
             }
         }
+    }
+
+    FolderListModel {
+        id: images
+        folder: "file:///home/vinh/Pictures/lockscreen"
+        nameFilters: ["*.jpg", "*.jpeg", "*.png"]
+        showDirs: false
     }
 
     WlSessionLock {
@@ -38,11 +47,50 @@ Scope {
             property bool awake: false
             property string timeText: ""
             property string dateText: ""
+            property int imageIndex: 0
+            property bool showA: true
 
             function wake() {
                 surface.awake = true
                 sleepTimer.restart()
                 input.forceActiveFocus()
+            }
+
+            function nextImage() {
+                if (images.count < 2) return
+                surface.imageIndex = (surface.imageIndex + 1) % images.count
+                const url = images.get(surface.imageIndex, "fileUrl")
+                if (surface.showA) imgB.source = url
+                else imgA.source = url
+                surface.showA = !surface.showA
+            }
+
+            Component.onCompleted: {
+                if (images.count > 0) imgA.source = images.get(0, "fileUrl")
+            }
+
+            Connections {
+                target: images
+                function onCountChanged() {
+                    if (images.count > 0 && imgA.source == "") imgA.source = images.get(0, "fileUrl")
+                }
+            }
+
+            Connections {
+                target: root
+                function onFailedChanged() {
+                    if (root.failed) {
+                        surface.wake()
+                        shake.restart()
+                    }
+                }
+            }
+
+            Timer {
+                interval: 5000
+                running: sessionLock.locked
+                repeat: true
+                onTriggered: surface.nextImage()
             }
 
             Timer {
@@ -67,12 +115,26 @@ Scope {
                 }
             }
 
-            Image {
+            Item {
                 id: wallpaper
                 anchors.fill: parent
-                source: "file:///home/vinh/Pictures/wallpaper.jpg"
-                fillMode: Image.PreserveAspectCrop
                 visible: false
+
+                Image {
+                    id: imgA
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectCrop
+                    opacity: surface.showA ? 1 : 0
+                    Behavior on opacity { NumberAnimation { duration: 1000; easing.type: Easing.InOutQuad } }
+                }
+
+                Image {
+                    id: imgB
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectCrop
+                    opacity: surface.showA ? 0 : 1
+                    Behavior on opacity { NumberAnimation { duration: 1000; easing.type: Easing.InOutQuad } }
+                }
             }
 
             MultiEffect {
@@ -121,9 +183,20 @@ Scope {
                 }
 
                 Item {
+                    id: passwordBox
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: 260
                     height: 40
+
+                    SequentialAnimation {
+                        id: shake
+                        NumberAnimation { target: passwordBox; property: "anchors.horizontalCenterOffset"; to: -14; duration: 50 }
+                        NumberAnimation { target: passwordBox; property: "anchors.horizontalCenterOffset"; to: 14; duration: 70 }
+                        NumberAnimation { target: passwordBox; property: "anchors.horizontalCenterOffset"; to: -10; duration: 70 }
+                        NumberAnimation { target: passwordBox; property: "anchors.horizontalCenterOffset"; to: 10; duration: 70 }
+                        NumberAnimation { target: passwordBox; property: "anchors.horizontalCenterOffset"; to: -5; duration: 60 }
+                        NumberAnimation { target: passwordBox; property: "anchors.horizontalCenterOffset"; to: 0; duration: 50 }
+                    }
 
                     TextInput {
                         id: input
@@ -140,7 +213,7 @@ Scope {
                         focus: true
                         onTextChanged: {
                             surface.wake()
-                            root.failed = false
+                            if (input.text !== "") root.failed = false
                         }
                         Keys.onPressed: (event) => surface.wake()
                         Keys.onEscapePressed: {
@@ -161,16 +234,17 @@ Scope {
                         text: root.failed ? "Wrong password" : "Enter password"
                         font.family: "JetBrainsMono Nerd Font"
                         font.pixelSize: 13
-                        color: root.failed ? "#c34043aa" : "#ffffffcc"
+                        color: root.failed ? "#e82424" : "#ffffffcc"
+                        Behavior on color { ColorAnimation { duration: 150 } }
                     }
 
                     Rectangle {
                         anchors.bottom: parent.bottom
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: parent.width
-                        height: 1
-                        color: root.failed ? "#c34043aa" : "#ffffffcc"
-                        Behavior on color { ColorAnimation { duration: 200 } }
+                        height: root.failed ? 2 : 1
+                        color: root.failed ? "#e82424" : "#ffffffcc"
+                        Behavior on color { ColorAnimation { duration: 150 } }
                     }
                 }
             }

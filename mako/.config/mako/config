@@ -58,3 +58,10 @@ invisible=0
 
 [mode=do-not-disturb app-name=osd]
 invisible=0
+
+[urgency=critical]
+border-color=#c34043
+default-timeout=0
+
+[mode=do-not-disturb urgency=critical]
+invisible=0
