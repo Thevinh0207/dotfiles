@@ -10,6 +10,7 @@ Scope {
     id: root
     property string password: ""
     property bool failed: false
+    property int lastIndex: -1
 
     PamContext {
         id: pam
@@ -33,7 +34,7 @@ Scope {
     FolderListModel {
         id: images
         folder: "file:///home/vinh/Pictures/lockscreen"
-        nameFilters: ["*.jpg", "*.jpeg", "*.png"]
+        nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.gif"]
         showDirs: false
     }
 
@@ -47,8 +48,6 @@ Scope {
             property bool awake: false
             property string timeText: ""
             property string dateText: ""
-            property int imageIndex: 0
-            property bool showA: true
 
             function wake() {
                 surface.awake = true
@@ -56,23 +55,20 @@ Scope {
                 input.forceActiveFocus()
             }
 
-            function nextImage() {
-                if (images.count < 2) return
-                surface.imageIndex = (surface.imageIndex + 1) % images.count
-                const url = images.get(surface.imageIndex, "fileUrl")
-                if (surface.showA) imgB.source = url
-                else imgA.source = url
-                surface.showA = !surface.showA
+            function pickImage() {
+                if (images.count === 0) return
+                let i = Math.floor(Math.random() * images.count)
+                if (images.count > 1 && i === root.lastIndex) i = (i + 1) % images.count
+                root.lastIndex = i
+                wallpaper.source = images.get(i, "fileUrl")
             }
 
-            Component.onCompleted: {
-                if (images.count > 0) imgA.source = images.get(0, "fileUrl")
-            }
+            Component.onCompleted: surface.pickImage()
 
             Connections {
                 target: images
                 function onCountChanged() {
-                    if (images.count > 0 && imgA.source == "") imgA.source = images.get(0, "fileUrl")
+                    if (wallpaper.source == "") surface.pickImage()
                 }
             }
 
@@ -84,13 +80,6 @@ Scope {
                         shake.restart()
                     }
                 }
-            }
-
-            Timer {
-                interval: 5000
-                running: sessionLock.locked
-                repeat: true
-                onTriggered: surface.nextImage()
             }
 
             Timer {
@@ -115,26 +104,12 @@ Scope {
                 }
             }
 
-            Item {
+            AnimatedImage {
                 id: wallpaper
                 anchors.fill: parent
+                fillMode: Image.PreserveAspectCrop
+                playing: sessionLock.locked
                 visible: false
-
-                Image {
-                    id: imgA
-                    anchors.fill: parent
-                    fillMode: Image.PreserveAspectCrop
-                    opacity: surface.showA ? 1 : 0
-                    Behavior on opacity { NumberAnimation { duration: 1000; easing.type: Easing.InOutQuad } }
-                }
-
-                Image {
-                    id: imgB
-                    anchors.fill: parent
-                    fillMode: Image.PreserveAspectCrop
-                    opacity: surface.showA ? 0 : 1
-                    Behavior on opacity { NumberAnimation { duration: 1000; easing.type: Easing.InOutQuad } }
-                }
             }
 
             MultiEffect {
@@ -151,6 +126,7 @@ Scope {
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true
+                cursorShape: surface.awake ? Qt.ArrowCursor : Qt.BlankCursor
                 onPositionChanged: surface.wake()
                 onClicked: surface.wake()
             }

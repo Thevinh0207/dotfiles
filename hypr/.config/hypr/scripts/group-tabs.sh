@@ -2,7 +2,7 @@
 
 ws=$(hyprctl activeworkspace -j | jq '.id')
 hyprctl clients -j | jq -c --argjson ws "$ws" '
-  [ .[] | select(.workspace.id == $ws and (.grouped | length) > 1) ] as $c
+  [ .[] | select(.workspace.id == $ws and (.grouped | length) > 0) ] as $c
   | [ $c[] | .grouped ] | unique
   | map(. as $g
       | [ $c[] | select(.address as $a | $g | index($a) != null) ] as $members
