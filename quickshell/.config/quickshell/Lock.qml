@@ -117,8 +117,8 @@ Scope {
                 source: wallpaper
                 blurEnabled: true
                 blurMax: 64
-                blur: surface.awake ? 1.0 : 0.0
-                brightness: surface.awake ? -0.3 : 0.0
+                blur: surface.awake ? 0.5 : 0.0
+                brightness: surface.awake ? -0.15 : 0.0
                 Behavior on blur { NumberAnimation { duration: 350; easing.type: Easing.OutCubic } }
                 Behavior on brightness { NumberAnimation { duration: 350; easing.type: Easing.OutCubic } }
             }
