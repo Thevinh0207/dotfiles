@@ -37,8 +37,8 @@ end)
 ---- ENVIRONMENT VARIABLES ----
 -------------------------------
 
-hl.env("XCURSOR_SIZE", "24")
-hl.env("HYPRCURSOR_SIZE", "24")
+hl.env("XCURSOR_SIZE", "20")
+hl.env("HYPRCURSOR_SIZE", "20")
 
 -----------------------
 ---- LOOK AND FEEL ----
@@ -117,10 +117,27 @@ hl.animation({ leaf = "workspacesIn", enabled = true, speed = 1.21, bezier = "al
 hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7, bezier = "quick" })
 
--- See https://wiki.hypr.land/configuring/layouts/dwindle-layout/ for more
 hl.config({
-	dwindle = {
-		preserve_split = true,
+	group = {
+		auto_group = true,
+		col = {
+			border_active = "rgba(c8c8c8aa)",
+			border_inactive = "rgba(000000aa)",
+		},
+		groupbar = {
+			font_family = "JetBrainsMono Nerd Font",
+			font_size = 11,
+			height = 20,
+			gradients = true,
+			rounding = 8,
+			indicator_height = 0,
+			text_color = "rgba(1f1f28ff)",
+			text_color_inactive = "rgba(dcd7baff)",
+			col = {
+				active = "rgba(7e9cd8dd)",
+				inactive = "rgba(2a2a37dd)",
+			},
+		},
 	},
 })
 
@@ -204,8 +221,9 @@ hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
 
 -- Windows manipulation and window switching
-hl.bind("ALT + TAB", hl.dsp.window.cycle_next())
-hl.bind("ALT + SHIFT + TAB", hl.dsp.window.cycle_next({ next = false }))
+hl.bind("ALT + TAB", hl.dsp.exec_cmd("~/.config/hypr/scripts/alt-tab.sh next"))
+hl.bind("ALT + SHIFT + TAB", hl.dsp.exec_cmd("~/.config/hypr/scripts/alt-tab.sh prev"))
+hl.bind(mainMod .. " + G", hl.dsp.group.toggle())
 
 -- Workspace manipulation keybinds
 hl.bind(mainMod .. " + TAB", hl.dsp.focus({ workspace = "e+1" }))
