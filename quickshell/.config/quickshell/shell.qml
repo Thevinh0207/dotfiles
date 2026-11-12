@@ -556,9 +556,9 @@ ShellRoot {
                         }
 
                         PowerButton {
-                            icon: "\uf08b"
-                            label: "Log out"
-                            onActivated: root.launch(["hyprctl", "dispatch", "hl.dsp.exit()"])
+                            icon: "\uf236"
+                            label: "Sleep"
+                            onActivated: root.launch(["systemctl", "suspend"])
                         }
 
                         PowerButton {
