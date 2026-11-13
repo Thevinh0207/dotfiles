@@ -8,6 +8,7 @@ current=""
 
 while true; do
     file=$(find "$dir" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) | shuf -n 1)
+    ln -sf "$file" ~/.cache/current-wallpaper
     swaybg -i "$file" -m fill &
     new=$!
     sleep 1

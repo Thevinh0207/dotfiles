@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import Qt.labs.folderlistmodel
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
@@ -10,7 +9,6 @@ Scope {
     id: root
     property string password: ""
     property bool failed: false
-    property int lastIndex: -1
 
     PamContext {
         id: pam
@@ -31,13 +29,6 @@ Scope {
         }
     }
 
-    FolderListModel {
-        id: images
-        folder: "file:///home/vinh/Pictures/lockscreen"
-        nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.gif"]
-        showDirs: false
-    }
-
     WlSessionLock {
         id: sessionLock
         locked: false
@@ -53,23 +44,6 @@ Scope {
                 surface.awake = true
                 sleepTimer.restart()
                 input.forceActiveFocus()
-            }
-
-            function pickImage() {
-                if (images.count === 0) return
-                let i = Math.floor(Math.random() * images.count)
-                if (images.count > 1 && i === root.lastIndex) i = (i + 1) % images.count
-                root.lastIndex = i
-                wallpaper.source = images.get(i, "fileUrl")
-            }
-
-            Component.onCompleted: surface.pickImage()
-
-            Connections {
-                target: images
-                function onCountChanged() {
-                    if (wallpaper.source == "") surface.pickImage()
-                }
             }
 
             Connections {
@@ -107,6 +81,8 @@ Scope {
             AnimatedImage {
                 id: wallpaper
                 anchors.fill: parent
+                source: "file:///home/vinh/.cache/current-wallpaper"
+                cache: false
                 fillMode: Image.PreserveAspectCrop
                 playing: sessionLock.locked
                 visible: false
