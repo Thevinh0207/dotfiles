@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Wayland
 import Quickshell.Hyprland
 
 Scope {
@@ -60,13 +61,14 @@ Scope {
                 left: true
             }
             margins {
-            top: bar.modelData.y - 31
+                top: bar.modelData.y - 28
                 left: bar.modelData.x
             }
             exclusiveZone: 0
             implicitWidth: bar.modelData.w
-            implicitHeight: 24
+            implicitHeight: 20
             color: "transparent"
+            WlrLayershell.layer: WlrLayer.Bottom
 
             Row {
                 anchors.fill: parent

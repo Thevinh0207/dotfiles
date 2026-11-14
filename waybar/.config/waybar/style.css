@@ -67,19 +67,24 @@ tooltip {
 #clock,
 #tray,
 #custom-power {
-  padding: 0 8px;
+  padding: 0 6px;
   color: #dcd7ba;
 }
 
 #mpris,
 #custom-media-prev,
 #custom-media-next {
-  padding: 0 6px;
+  padding: 0 4px;
   color: #dcd7ba;
 }
 
-#mpris {
+#custom-media-prev {
   margin-left: 8px;
+}
+
+#custom-media-prev:hover,
+#custom-media-next:hover {
+  color: #7e9cd8;
 }
 
 #mpris.spotify {
@@ -88,6 +93,10 @@ tooltip {
 
 #mpris.paused {
   color: #727169;
+}
+
+#temperature.critical {
+  color: #c34043;
 }
 
 #battery.critical,
@@ -100,7 +109,8 @@ tooltip {
 }
 
 #battery.charging,
-#battery.plugged {
+#battery.plugged,
+#battery.not-charging {
   color: #98bb6c;
 }
 
@@ -119,4 +129,17 @@ tooltip {
 
 #custom-menu:hover {
   color: #7e9cd8;
+}
+
+#custom-media {
+  padding: 0 4px;
+  color: #98bb6c;
+}
+
+#custom-media.paused {
+  color: #727169;
+}
+
+#image.art {
+  margin: 0 2px;
 }

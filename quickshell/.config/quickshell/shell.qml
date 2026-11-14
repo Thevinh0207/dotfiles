@@ -2,6 +2,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import Quickshell.Widgets
+import Quickshell.Services.Mpris
 
 ShellRoot {
     id: root
@@ -21,9 +23,14 @@ ShellRoot {
     property bool dnd: false
     property bool night: false
     property int nightStrength: 50
-    property string mediaStatus: ""
-    property string mediaTitle: ""
-    property string mediaArtist: ""
+
+    property var player: {
+        const list = Mpris.players.values
+        for (const p of list) {
+            if (p.identity.toLowerCase().includes("spotify")) return p
+        }
+        return list.length > 0 ? list[0] : null
+    }
 
     function parse(text) {
         const lines = text.split("\n")
@@ -45,9 +52,6 @@ ShellRoot {
             else if (key === "dnd") root.dnd = val === "on"
             else if (key === "night") root.night = val === "on"
             else if (key === "night_strength") root.nightStrength = parseInt(val) || 50
-            else if (key === "media_status") root.mediaStatus = val
-            else if (key === "media_title") root.mediaTitle = val
-            else if (key === "media_artist") root.mediaArtist = val
         }
     }
 
@@ -63,6 +67,13 @@ ShellRoot {
 
     function nightTemp() {
         return 6500 - root.nightStrength * 35
+    }
+
+    function formatTime(seconds) {
+        const s = Math.max(0, Math.floor(seconds))
+        const m = Math.floor(s / 60)
+        const r = s % 60
+        return m + ":" + (r < 10 ? "0" : "") + r
     }
 
     Process {
@@ -85,6 +96,13 @@ ShellRoot {
         id: refreshSoon
         interval: 400
         onTriggered: statusProc.running = true
+    }
+
+    Timer {
+        interval: 1000
+        running: panel.visible && root.player !== null && root.player.isPlaying
+        repeat: true
+        onTriggered: root.player.positionChanged()
     }
 
     Timer {
@@ -358,59 +376,120 @@ ShellRoot {
                     }
 
                     Rectangle {
-                        visible: root.mediaStatus !== ""
+                        visible: root.player !== null
                         width: 360
-                        height: 72
+                        height: mediaRow.implicitHeight + 24
                         radius: 14
                         color: "#2a2a37"
 
-                        Column {
-                            anchors.left: parent.left
-                            anchors.leftMargin: 14
-                            anchors.verticalCenter: parent.verticalCenter
-                            spacing: 2
-
-                            Text {
-                                width: 200
-                                text: root.mediaTitle !== "" ? root.mediaTitle : "Unknown"
-                                elide: Text.ElideRight
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 13
-                                color: "#dcd7ba"
-                            }
-
-                            Text {
-                                width: 200
-                                text: root.mediaArtist
-                                elide: Text.ElideRight
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 11
-                                color: "#a8a49a"
-                            }
-                        }
-
                         Row {
-                            anchors.right: parent.right
-                            anchors.rightMargin: 10
-                            anchors.verticalCenter: parent.verticalCenter
-                            spacing: 4
+                            id: mediaRow
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.margins: 12
+                            spacing: 12
 
-                            MediaButton {
-                                icon: "\uf048"
-                                onActivated: root.exec(["playerctl", "previous"])
-                            }
+                            ClippingRectangle {
+                                width: 72
+                                height: 72
+                                radius: 10
+                                color: "#363646"
 
-                            MediaButton {
-                                icon: root.mediaStatus === "Playing" ? "\uf04c" : "\uf04b"
-                                onActivated: {
-                                    root.exec(["playerctl", "play-pause"])
-                                    root.mediaStatus = root.mediaStatus === "Playing" ? "Paused" : "Playing"
+                                Image {
+                                    anchors.fill: parent
+                                    source: root.player ? root.player.trackArtUrl : ""
+                                    fillMode: Image.PreserveAspectCrop
+                                    sourceSize.width: 144
+                                    sourceSize.height: 144
+                                    asynchronous: true
+                                }
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    visible: !root.player || root.player.trackArtUrl === ""
+                                    text: "\uf001"
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 24
+                                    color: "#727169"
                                 }
                             }
 
-                            MediaButton {
-                                icon: "\uf051"
-                                onActivated: root.exec(["playerctl", "next"])
+                            Column {
+                                width: 252
+                                spacing: 6
+
+                                Text {
+                                    width: parent.width
+                                    text: root.player && root.player.trackTitle !== "" ? root.player.trackTitle : "Unknown"
+                                    elide: Text.ElideRight
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 13
+                                    color: "#dcd7ba"
+                                }
+
+                                Text {
+                                    width: parent.width
+                                    text: root.player ? root.player.trackArtist : ""
+                                    elide: Text.ElideRight
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 11
+                                    color: "#a8a49a"
+                                }
+
+                                Rectangle {
+                                    width: parent.width
+                                    height: 4
+                                    radius: 2
+                                    color: "#363646"
+
+                                    Rectangle {
+                                        height: parent.height
+                                        radius: 2
+                                        color: "#7e9cd8"
+                                        width: root.player && root.player.length > 0 ? parent.width * Math.min(1, root.player.position / root.player.length) : 0
+                                    }
+                                }
+
+                                Item {
+                                    width: parent.width
+                                    height: 14
+
+                                    Text {
+                                        anchors.left: parent.left
+                                        text: root.player ? root.formatTime(root.player.position) : "0:00"
+                                        font.family: "JetBrainsMono Nerd Font"
+                                        font.pixelSize: 10
+                                        color: "#a8a49a"
+                                    }
+
+                                    Text {
+                                        anchors.right: parent.right
+                                        text: root.player ? root.formatTime(root.player.length) : "0:00"
+                                        font.family: "JetBrainsMono Nerd Font"
+                                        font.pixelSize: 10
+                                        color: "#a8a49a"
+                                    }
+                                }
+
+                                Row {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    spacing: 8
+
+                                    MediaButton {
+                                        icon: "\uf048"
+                                        onActivated: if (root.player) root.player.previous()
+                                    }
+
+                                    MediaButton {
+                                        icon: root.player && root.player.isPlaying ? "\uf04c" : "\uf04b"
+                                        onActivated: if (root.player) root.player.togglePlaying()
+                                    }
+
+                                    MediaButton {
+                                        icon: "\uf051"
+                                        onActivated: if (root.player) root.player.next()
+                                    }
+                                }
                             }
                         }
                     }
@@ -426,10 +505,7 @@ ShellRoot {
                             sub: root.wifiOn ? (root.ssid !== "" ? root.ssid : "Not connected") : "Off"
                             on: root.wifiOn
                             hasMenu: true
-                            onToggled: {
-                                root.exec(["nmcli", "radio", "wifi", root.wifiOn ? "off" : "on"])
-                                root.wifiOn = !root.wifiOn
-                            }
+                            onToggled: root.launch(["sh", "-c", "~/.config/hypr/scripts/wifi-menu.sh"])
                             onMenu: root.launch(["sh", "-c", "~/.config/hypr/scripts/wifi-menu.sh"])
                         }
 
@@ -439,10 +515,7 @@ ShellRoot {
                             sub: root.btOn ? "On" : "Off"
                             on: root.btOn
                             hasMenu: true
-                            onToggled: {
-                                root.exec(["bluetoothctl", "power", root.btOn ? "off" : "on"])
-                                root.btOn = !root.btOn
-                            }
+                            onToggled: root.launch(["blueman-manager"])
                             onMenu: root.launch(["blueman-manager"])
                         }
 

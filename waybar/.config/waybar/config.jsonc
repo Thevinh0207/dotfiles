@@ -3,21 +3,25 @@
     "exclusive": false,
     "start_hidden": true,
     "height": 35,
-    "spacing": 10,
+    "spacing": 4,
     "margin-top": 6,
     "margin-left": 10,
     "margin-right": 10,
     "modules-left": [
-        "hyprland/workspaces"
+        "hyprland/workspaces",
+        "custom/media-prev",
+        "image#art",
+        "custom/media",
+        "custom/media-next"
     ],
     "modules-center": [
         "hyprland/window"
     ],
     "modules-right": [
         "cpu",
+        // "temperature",
         "memory",
         "network",
-        "power-profiles-daemon",
         "battery",
         "clock",
         "custom/menu"
@@ -31,12 +35,51 @@
     "hyprland/window": {
         "max-length": 50
     },
+    "image#art": {
+        "exec": "~/.config/hypr/scripts/album-art.sh",
+        "size": 20,
+        "interval": 2,
+        "on-click": "playerctl -p spotify play-pause"
+    },
+    "custom/media": {
+        "exec": "~/.config/hypr/scripts/media-scroll.sh",
+        "return-type": "json",
+        "escape": true,
+        "on-click": "playerctl -p spotify play-pause",
+        "tooltip": false
+    },
+    "custom/media-prev": {
+        "format": "{}",
+        "exec": "echo \uf048",
+        "exec-if": "playerctl -p spotify status >/dev/null 2>&1",
+        "interval": 2,
+        "on-click": "playerctl -p spotify previous",
+        "tooltip": false
+    },
+    "custom/media-next": {
+        "format": "{}",
+        "exec": "echo \uf051",
+        "exec-if": "playerctl -p spotify status >/dev/null 2>&1",
+        "interval": 2,
+        "on-click": "playerctl -p spotify next",
+        "tooltip": false
+    },
     "cpu": {
         "format": "\uf2db {usage}%",
+        "interval": 1,
+        "tooltip": false
+    },
+    "temperature": {
+        "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
+        "input-filename": "temp1_input",
+        "format": "\uf2c9 {temperatureC}°C",
+        "critical-threshold": 85,
+        "interval": 1,
         "tooltip": false
     },
     "memory": {
-        "format": "\udb80\udf5b {used:0.1f}/{total:0.1f}G",
+        "format": "\udb80\udf5b {percentage}%",
+        "interval": 1,
         "tooltip-format": "RAM: {used:0.1f}G used of {total:0.1f}G ({percentage}%)\nAvailable: {avail:0.1f}G\nSwap: {swapUsed:0.1f}G of {swapTotal:0.1f}G"
     },
     "backlight": {
@@ -81,11 +124,13 @@
         }
     },
     "battery": {
+        "interval": 2,
         "states": {
             "warning": 30,
             "critical": 15
         },
         "format": "{icon} {capacity}%",
+        "format-not-charging": "\uf1e6 {capacity}%",
         "format-charging": "\uf0e7 {capacity}%",
         "format-plugged": "\uf1e6 {capacity}%",
         "format-icons": [
