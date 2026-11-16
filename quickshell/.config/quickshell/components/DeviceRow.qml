@@ -14,7 +14,7 @@ Rectangle {
     width: 360
     height: 52
     radius: 12
-    color: active ? "#7e9cd826" : ((area.containsMouse || activeFocus) ? "#363646" : "#2a2a37")
+    color: active ? "#267e9cd8" : ((area.containsMouse || activeFocus) ? "#363646" : "#2a2a37")
     border.width: activeFocus ? 2 : (active ? 1 : 0)
     border.color: activeFocus ? "#dcd7ba" : "#7e9cd8"
     activeFocusOnTab: true

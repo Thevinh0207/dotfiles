@@ -33,6 +33,7 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("qs")
 	hl.exec_cmd("~/.config/hypr/scripts/wallpaper.sh")
 	hl.exec_cmd("export QT_LOGGING_RULES='qt.qpa.wayland.textinput=false'")
+	hl.exec_cmd("sway-audio-idle-inhibit")
 end)
 
 hl.config({

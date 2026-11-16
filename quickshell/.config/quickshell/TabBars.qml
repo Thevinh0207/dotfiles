@@ -83,7 +83,7 @@ Scope {
                         width: (bar.implicitWidth - 4 * (bar.modelData.tabs.length - 1)) / bar.modelData.tabs.length
                         height: 20
                         radius: 8
-                        color: tab.modelData.active ? "#7e9cd8dd" : (tabArea.containsMouse ? "#363646dd" : "#2a2a37dd")
+                        color: tab.modelData.active ? "#dd7e9cd8" : (tabArea.containsMouse ? "#dd363646" : "#dd2a2a37")
 
                         Row {
                             anchors.centerIn: parent
