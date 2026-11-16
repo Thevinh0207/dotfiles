@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Bluetooth
 import "../components"
 
@@ -9,6 +10,8 @@ Column {
     width: 360
     spacing: 16
     enabled: ctl.page === "main"
+
+    property bool studyOn: false
 
     property string btSub: {
         const a = Bluetooth.defaultAdapter
@@ -21,6 +24,20 @@ Column {
 
     function focusFirst() {
         wifiTile.forceActiveFocus()
+    }
+
+    Process {
+        id: studyCheck
+        command: ["test", "-f", "/tmp/study-mode"]
+        onExited: (exitCode, exitStatus) => page.studyOn = exitCode === 0
+    }
+
+    Timer {
+        interval: 2000
+        running: true
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: if (!studyCheck.running) studyCheck.running = true
     }
 
     Row {
@@ -110,6 +127,17 @@ Column {
             sub: page.ctl.limit <= 80 ? page.ctl.limit + "%" : "Off"
             on: page.ctl.limit <= 80
             onToggled: page.ctl.exec(["sh", "-c", "~/.config/hypr/scripts/battery-limit.sh"])
+        }
+
+        Tile {
+            icon: "\uf02d"
+            label: "Study mode"
+            sub: page.studyOn ? "On" : "Off"
+            on: page.studyOn
+            onToggled: {
+                Quickshell.execDetached(["sh", "-c", "~/.config/hypr/scripts/study-mode.sh"])
+                page.studyOn = !page.studyOn
+            }
         }
     }
 
