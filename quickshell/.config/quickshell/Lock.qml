@@ -241,7 +241,14 @@ Scope {
                             surface.wake()
                             if (input.text !== "") root.failed = false
                         }
-                        Keys.onPressed: (event) => surface.wake()
+                        Keys.onPressed: (event) => {
+                            if (!surface.awake) {
+                                surface.wake()
+                                event.accepted = true
+                                return
+                            }
+                            surface.wake()
+                        }
                         Keys.onEscapePressed: {
                             if (surface.powerMenuOpen) {
                                 surface.powerMenuOpen = false
