@@ -6,6 +6,7 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import Quickshell.Services.Pam
 import Quickshell.Services.Mpris
+import Quickshell.Services.UPower
 
 Scope {
     id: root
@@ -35,8 +36,7 @@ Scope {
 
     PamContext {
         id: pam
-        configDirectory: "pam"
-        config: "password.conf"
+        config: "hyprlock"
         onResponseRequiredChanged: {
             if (responseRequired) respond(root.password)
         }
@@ -154,7 +154,8 @@ Scope {
                 source: "file:///home/vinh/.cache/current-wallpaper"
                 cache: false
                 fillMode: Image.PreserveAspectCrop
-                playing: sessionLock.locked
+                playing: sessionLock.locked && surface.awake
+                sourceSize: Qt.size(surface.width, surface.height)
                 visible: false
             }
 
@@ -162,7 +163,7 @@ Scope {
                 anchors.fill: parent
                 source: wallpaper
                 blurEnabled: true
-                blurMax: 32
+                blurMax: 16
                 blur: surface.awake ? 0.3 : 0.0
                 brightness: surface.awake ? -0.3 : 0.0
                 Behavior on blur { NumberAnimation { duration: 350; easing.type: Easing.OutCubic } }
@@ -573,6 +574,37 @@ Scope {
                             surface.powerMenuOpen = !surface.powerMenuOpen
                         }
                     }
+                }
+            }
+            Row {
+                id: batteryRow
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.bottomMargin: 46
+                anchors.rightMargin: 96
+                spacing: 8
+                property var battery: UPower.displayDevice
+                property int level: battery && battery.energyCapacity > 0 ? Math.round(battery.energy / battery.energyCapacity * 100) : 0
+                property bool charging: battery !== null && battery.state === UPowerDeviceState.Charging
+                opacity: surface.awake && surface.confirmAction === "" ? 1 : 0
+                visible: opacity > 0
+                Behavior on opacity { NumberAnimation { duration: 350; easing.type: Easing.OutCubic } }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: batteryRow.charging ? "\uf0e7" : ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"][Math.min(4, Math.floor(batteryRow.level / 20))]
+                    font.family: "JetBrainsMono Nerd Font"
+                    font.pixelSize: 16
+                    color: batteryRow.level <= 15 && !batteryRow.charging ? "#e82424" : "#c8c093"
+                    Behavior on color { ColorAnimation { duration: 150 } }
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: batteryRow.level + "%"
+                    font.family: "JetBrainsMono Nerd Font"
+                    font.pixelSize: 13
+                    color: "#dcd7ba"
                 }
             }
 
