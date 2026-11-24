@@ -1,0 +1,11 @@
+-- Start up apps
+hl.on("hyprland.start", function()
+	hl.exec_cmd("hypridle")
+	hl.exec_cmd("mako")
+	hl.exec_cmd("~/.config/hypr/scripts/waybar-autohide.sh")
+	hl.exec_cmd("~/.config/hypr/scripts/workspace-popup.sh")
+	hl.exec_cmd("~/.config/hypr/scripts/battery-monitor.sh")
+	hl.exec_cmd("qs")
+	hl.exec_cmd("~/.config/hypr/scripts/wallpaper.sh")
+	hl.exec_cmd("sway-audio-idle-inhibit")
+end)

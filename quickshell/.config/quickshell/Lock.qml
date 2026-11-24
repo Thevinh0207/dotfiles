@@ -36,7 +36,7 @@ Scope {
 
     PamContext {
         id: pam
-        config: "hyprlock"
+        config: "qs-lock"
         onResponseRequiredChanged: {
             if (responseRequired) respond(root.password)
         }
@@ -595,7 +595,7 @@ Scope {
                     text: batteryRow.charging ? "\uf0e7" : ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"][Math.min(4, Math.floor(batteryRow.level / 20))]
                     font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 16
-                    color: batteryRow.level <= 15 && !batteryRow.charging ? "#e82424" : "#c8c093"
+                    color: batteryRow.charging ? "#7fb4ca" : batteryRow.level > 60 ? "#98bb6c" : batteryRow.level > 30 ? "#e6c384" : batteryRow.level > 15 ? "#ffa066" : "#e82424"
                     Behavior on color { ColorAnimation { duration: 150 } }
                 }
 
